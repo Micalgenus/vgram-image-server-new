@@ -1,0 +1,30 @@
+{
+  "name": "swagger",
+  "version": "0.0.1",
+  "private": true,
+  "description": "New Swagger API Project",
+  "keywords": [],
+  "author": "",
+  "license": "",
+  "main": "app.js",
+  "dependencies": {
+    "cors": "^2.8.3",
+    "debug": "^2.6.6",
+    "express": "^4.12.3",
+    "swagger-express-mw": "^0.1.0",
+    "swagger-tools": "^0.10.1",
+    "yamljs": "^0.2.10"
+  },
+  "devDependencies": {
+    "http-server": "^0.10.0",
+    "should": "^7.1.0",
+    "supertest": "^1.0.0"
+  },
+  "scripts": {
+    "mock-start": "swagger project start -m",
+    "edit": "swagger project edit",
+    "verify": "swagger project verify",
+    "test": "swagger project test",
+    "file-server": "http-server --cors ./api/swagger -p 8089"
+  }
+}

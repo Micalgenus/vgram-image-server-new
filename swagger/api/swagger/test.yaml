@@ -1,0 +1,70 @@
+swagger: "2.0"
+
+info:
+  version: 0.0.1
+  title: Test Sub-API
+  description: Test operations, definitions, parameters and responses
+
+paths:
+  /api/test:
+    # binds a127 app logic to a route
+    x-swagger-router-controller: test
+    get:
+      description: Returns 'getQuoter' to the caller
+      # used as the method name of the controller
+      operationId: getQuoter
+      responses:
+        "200":
+          description: "successful operation"
+          schema:
+            $ref: "./commons.yaml#/definitions/HelloWorldMessage"
+        # responses may fall through to errors
+        default:
+          description: "error operation"
+          schema:
+            $ref: "./commons.yaml#/definitions/ErrorResponse"
+
+
+  /api/test/hello:
+    # binds a127 app logic to a route
+    x-swagger-router-controller: test
+    get:
+      description: Returns 'Hello' to the caller
+      # used as the method name of the controller
+      operationId: hello
+      parameters:
+        - name: name
+          in: query
+          description: The name of the person to whom to say hello
+          required: false
+          type: string
+      responses:
+        "200":
+          description: "successful operation"
+          schema:
+            $ref: "./commons.yaml#/definitions/PlainMessage"
+        # responses may fall through to errors
+        default:
+          description: "error operation"
+          schema:
+            $ref: "./commons.yaml#/definitions/ErrorResponse"
+
+
+  /api/test/protected:
+    # binds a127 app logic to a route
+    x-swagger-router-controller: test
+    get:
+      summary: passport의 emptyExtractor() 때문에 현재는 인증(로그인)을 하지 않아도 성공한다.
+      description: Returns The server Protected OR Error to the caller
+      # used as the method name of the controller
+      operationId: protectedRoute
+      responses:
+        "200":
+          description: "successful operation"
+          schema:
+            $ref: "./commons.yaml#/definitions/PlainMessage"
+        # responses may fall through to errors
+        default:
+          description: "error operation"
+          schema:
+            $ref: "./commons.yaml#/definitions/ErrorResponse"
