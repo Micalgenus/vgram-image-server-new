@@ -68,10 +68,14 @@ exports.convertVRPano = function (imagePaths, folderName) {
    if (!folderName) {
       return Promise.reject("must pass argument(folderName) :  " + folderName);
    }
-
+   console.log("sfsdfd");
    const configArgs = "-config=" + vtourConfig;
-   const folderPath = path.posix.join(config.root, config.resource.VTOURS_DIR, folderName);
+    console.log("sfsdfd2");
+    console.log(config.root);
+    console.log(config.resource.VTOURS_DIR);
+   const folderPath = path.posix.join(config.root.path, config.resource.VTOURS_DIR, folderName);
 
+    console.log(folderName);
    // @link https://krpano.com/tools/kmakemultires/config/
    const tilePath = "-tilepath=" + folderPath + "/panos/%BASENAME%.tiles/pano[_c].jpg";
    const customImagePath = "-customimage[mobile].path=" + folderPath + "/panos/%BASENAME%.tiles/mobile/pano_%s.jpg";
@@ -84,6 +88,9 @@ exports.convertVRPano = function (imagePaths, folderName) {
    const makepanoArgs = _.concat(["makepano", configArgs], imagePaths,
       tilePath, customImagePath, thumbPath, xmlPath, htmlPath, previewPath, previewArgs);
 
+
+   console.log(makepanoArgs);
+   console.log("=-========================");
    // image 파일이 존재하는지에 대한 검증은 하지 못함
    // 이미지 파일이 존재하지 않아도 echo(stdout)로 출력됨, stderr = ""
    // process option을 변수를 선언하여 재활용 했더니 에러가 난다
@@ -108,6 +115,7 @@ exports.convertVRPano = function (imagePaths, folderName) {
 
    log.debug('[convert-vrpano-promise] childProcess.pid: ', childProcess.pid);
    childProcess.stdout.on('data', (data) => {
+      console.log(`[convert-vrpano-promise] stdout: ${data}`);
       log.debug(`[convert-vrpano-promise] stdout: ${data}`);
    });
 
