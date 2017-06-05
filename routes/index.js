@@ -36,13 +36,15 @@ let request_func= function(url, header, body) {
         url: url,
         method: 'POST',
         headers: header,
-        form: body
+        form:JSON.stringify(body)
     };
     function callback(error, response, body) {
         if (!error && response.statusCode == 200) {
             let info = JSON.parse(body);
         }
-    }
+    
+	}
+	console.log(options);
     request(options, callback);
 };
 let normal_image_processing = function(normal_images, user_email, postID) {
@@ -148,7 +150,8 @@ let vr_image_processing = function(vr_images, user_email, postID) {
                 });
                 return vrpano.convertVRPano(vrImagePaths, folderName).then((test) => {
 				//console.log(test);
-                        resolve(result);
+                       //  console.log(result);
+			resolve(result);
                 }).catch((err) => {
 			console.log(err);
 			});
@@ -177,13 +180,18 @@ router.post('/convert/images', requireAuth, function(req, res, next) {
     }).on('file', function(field, file) {
         if(field=='normal_images') normal_images.push(file);
     }).on('end', function() {
-        normal_image_processing(normal_images, user_email, fields["postID"]).then((result) => {
-	    request_func("http://loveljhs2.iptime.org:3000/api/post/images", 
+	//        res.status(200);
+	//res.send();
+	normal_image_processing(normal_images, user_email, fields["postID"]).then((result) => {
+//		request_func("http://139.59.106.78/", 
+	request_func("http://loveljhs2.iptime.org:3000/api/post/images", 
 			   {
-			   	"Content-Type": "application/x-www-form-urlencoded",
+			   //	"Content-Type": "application/x-www-form-urlencoded",
+				"Content-Type": "application/json",	
 				"Authorization" : token
 			   }, result);
-            res.json(result);
+             res.json(result);
+	//res.end(); 
         }).catch(() => {
             res.status(500);
             res.send();
@@ -192,7 +200,12 @@ router.post('/convert/images', requireAuth, function(req, res, next) {
     });
 });
 router.post('/', function(req, res, next) {
-    console.log(req.body);
+    	console.log("=-===================");
+	console.log(req.body);
+	console.log(req.body.images);
+	console.log(req.body.images[0]);
+	console.log(req.body.images[0]["type"]);
+    	console.log("=-===================");
     //console.log(req.header('Authorization'));
 
     res.json({result: true});
@@ -210,16 +223,23 @@ router.post('/convert/vtour', requireAuth,  function(req, res, next) {
         if(field=='vr_images') vr_images.push(file);
     }).on('end', function() {
 	    console.log(fields);
+	
+       // res.status(200);
+//	res.send();
         vr_image_processing(vr_images, user_email, fields["postID"]).then((result) => {
             request_func("http://loveljhs2.iptime.org:3000/api/post/vtour", 
 			    {
-			    	"Content-Type": "application/x-www-form-urlencoded",
+			    	//"Content-Type": "application/x-www-form-urlencoded",
+				"Content-Type": "application/json",	
 				"Authorization" : token
 				}, result);
+	//res.end(); 
             res.json(result);
         }).catch((err) => {
 	
-		console.log(err)	
+            res.status(500);
+            res.send();
+            res.end();
 	});
     });
 });
