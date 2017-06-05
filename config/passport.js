@@ -85,45 +85,36 @@ const localLogin = new LocalStrategy(localOptions, function (email, password, do
 const jwtOptions = {
   // Telling Passport to check authorization headers for JWT
   // jwtFromRequest: ExtractJwt.fromAuthHeader(),
-  jwtFromRequest: ExtractJwt.fromExtractors([ExtractJwt.fromAuthHeader(), cookieExtractor, emptyExtractor]),
+  jwtFromRequest: ExtractJwt.fromExtractors([ExtractJwt.fromAuthHeaderWithScheme("Bearer"), cookieExtractor]),
   // Telling Passport where to find the secret
   secretOrKey: config.secret,
-  // auth_token: 'JWT'
+  authScheme: 'Bearer'
 
   // TO-DO: Add issuer and audience checks
 };
-
 // Setting up JWT login strategy
 const jwtLogin = new JwtStrategy(jwtOptions, function (payload, done) {
-  // console.log(payload);
+    // console.log(payload);
 
-   if (!payload[localOptions.usernameField] || !payload[localOptions.passwordField]) {
-      return done(null, { logined: false }, { type: "success", message: "anonymous" });     // 로그인 되지 않은 회원, req.flash("success")
-   }
+    var expired = payload.exp - parseInt(new Date().getTime() / 1000) < 0;
 
-   // login이 안되있으면 error를 출력하기 말고, user 값을 null로 설정하기
-  users.findOne({where: {email: payload.email}}).then(function (user) {
-    if (user) {
-       user.logined = true;
-      done(null, user);   // localStrategy와 같다.
-    } else {
-      done(null, false,  { message: "authentication fails" });     // 회원 인증 실패(없는 회원), req.flash("error")
+    // 토큰이 만료되었음.
+    // 만료된 토큰에 대한 추가 갱신 로직이 필요할 것 같다.
+    if (expired) {
+        return done(null, false, {
+            message: message.error.tokenExpired
+        });
     }
-  }).catch(function (err) {
-    if (err) {
-      return done(err, false);
+
+    // login이 되지 않은 회원에게 error를 출력하지 않기 위헤서 user object를
+    // 아래와 같이 { logined: false }로 전송함
+    if (!payload[localOptions.usernameField] || !payload[localOptions.passwordField]) {
+        return done(null, false, {
+            message: message.error.requiredLogin
+        });
     }
-  });
-  //
-  // Member.findById(payload.idx).then(function(user) {
-  //   if (user) {
-  //     done(null, user);   // localStrategy와 같다.
-  //   } else {
-  //     done(null, false);
-  //   }
-  // }).catch(function(err) {
-  //   if (err) { return done(err, false); }
-  // });
+
+    return done(null, payload);   // localStrategy와 같다.
 });
 
 passport.use(jwtLogin);

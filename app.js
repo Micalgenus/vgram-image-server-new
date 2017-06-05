@@ -4,9 +4,10 @@ var favicon = require('serve-favicon');
 var logger = require('morgan');
 var cookieParser = require('cookie-parser');
 var bodyParser = require('body-parser');
-
+var cors = require('cors');
 var index = require('./routes/index');
 var users = require('./routes/users');
+var config = require("./config/main");
 
 var app = express();
 
@@ -16,12 +17,14 @@ app.set('view engine', 'ejs');
 
 // uncomment after placing your favicon in /public
 //app.use(favicon(path.join(__dirname, 'public', 'favicon.ico')));
+app.use(cors());
 app.use(logger('dev'));
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({
     limit: '150mb',
     parameterLimit: 100000000, // experiment with this parameter and tweak
-    extended: true
+    extended: true,
+    secret: config.secret
 }));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
