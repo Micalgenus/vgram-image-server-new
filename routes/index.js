@@ -21,7 +21,7 @@ const passportService = require("../config/passport");
 const requireAuth = passport.authenticate('jwt', {session: false});
 const requireLogin = passport.authenticate('local', {session: false});
 
-
+const path = require("path");
 /**
  * 일반 이미지 resizing 하는 부분
  * @param normal_images 일반 이미지의 배열
@@ -133,7 +133,7 @@ let vr_image_processing = function(vr_images, user_email, postID) {
 			type: "VR_IMAGE",
 			size: image.size,
 			file_name : file_name + '_' + image.name,
-			tile_dir_name : file_name + '_' + image.name,
+			tile_dir_name : file_name + '_' + path.basename(image.name, path.extname(image.name)) + ".tiles",
 			thumbnail_image_name: "thumb.jpg",
 			preview_image_name : "preview.jpg",
 		        mobile_dir_name : "mobile"
