@@ -8,7 +8,8 @@ var config = {
         "host": "localhost",    // actual hostname for resource hosting
         "dialect": "sqlite",
         "storage": "./db.development.sqlite",
-        "mediaUrl": "http://localhost:3000"    // 미디어/이미지 서버 URL
+        "mediaUrl": "http://localhost:3001",    // 미디어/이미지 서버 URL
+        "webServerUrl": "http://localhost:3000"  // http://loveljhs2.iptime.org:3000
     },
 
     "test": {
@@ -21,6 +22,7 @@ var config = {
         "host": "api.cozyhouzz.co.kr",    // The host of the relational database.
         "hostName": "api.cozyhouzz.co.kr",    // actual hostname for resource hosting,
         "mediaUrl": "http://media.cozyhouzz.co.kr",     // 미디어/이미지 서버 URL
+        "webServerUrl": "http://www.cozyhouzz.co.kr",  // http://loveljhs2.iptime.org:3000
         "dialect": "mysql",
         "pool": {
             "max": 50,

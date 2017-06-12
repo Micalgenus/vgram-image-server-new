@@ -1,9 +1,11 @@
 {
   "name": "image-server",
-  "version": "0.0.0",
+  "version": "0.0.1",
   "private": true,
   "scripts": {
-    "start": "node ./bin/www"
+    "start": "node ./bin/www",
+    "server:dev": "PORT=3001 node ./bin/www",
+    "server:dev:windows": "set PORT=3001&&node ./bin/www"
   },
   "dependencies": {
     "add-to-path": "^1.1.2",
