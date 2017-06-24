@@ -6,7 +6,15 @@ var dotenv = require('dotenv'),
 const appRoot = require('app-root-path');
 const path = require('path');
 
-dotenv.config();    // loading .env and write to process.env
+var envPath;
+if (process.env.NODE_ENV === "development") {
+    envPath = '.test.env';
+} else if (process.env.NODE_ENV === "production") {
+    envPath = '.env';
+} else {
+    throw new Error("no env file found.");
+}
+dotenv.config({path: envPath});    // loading .env and write to process.env
 
 // root project path 찾는 방법에 대해서는 여러가지 방법이 구현되어 있으나,
 // 현재는 이 방법을 사용한다.
@@ -16,7 +24,10 @@ const VTOUR_CONFIG_PATH = "templates/vtour-normal-custom.config";
 const PANOTOUR_PATH = path.join("vtour", "panos");
 
 vars = {
-   RESOURCE_DIR: "resources",
+    NODE_ENV: process.env.NODE_ENV || "development",
+    LOG_LEVEL: "debug",
+
+    RESOURCE_DIR: "resources",
    ATTACHED_DIR: "resources/attached",
    MEDIAS_DIR: "resources/medias",
    IMAGES_DIR: "resources/medias/images",
@@ -30,7 +41,21 @@ vars = {
    KRPANO_WIN_PATH: KRPANO_WIN_PATH,
    KRPANO_LINUX_PATH: KRPANO_LINUX_PATH,
    VTOUR_CONFIG_PATH: VTOUR_CONFIG_PATH,
-   PANOTOUR_PATH: PANOTOUR_PATH
+   PANOTOUR_PATH: PANOTOUR_PATH,
+
+    AUTH0_DOMAIN: "",
+    AUTH0_CLIENT_ID: "",
+    AUTH0_CLIENT_SECRET: "",
+    AUTH0_CALLBACK_URL: "",
+    AUTH0_JWKS_URI: "",
+    AUTH0_IDENTIFIER: "",
+    AUTH0_ISSUER: "",
+    AUTH0_JWT_EXPIRATION: 18000,
+    AUTH0_ALGORITHM: "RS256",
+
+
+    APP_NAME: "cozyhouzz image server",
+    PORT: 3000
 };
 
 _.forEach(vars, function(value, key){
@@ -66,6 +91,5 @@ _.forEach(vars, function(value, key){
 vars.development = vars.NODE_ENV === 'development';
 vars.test        = vars.NODE_ENV === 'test';
 vars.production  = vars.NODE_ENV === 'production';
-
 
 module.exports = vars;

@@ -18,6 +18,7 @@ const request = require("request");
 const moment = require("moment");
 const passport = require('passport');
 const passportService = require("../config/passport");
+
 const requireAuth = passport.authenticate('jwt', {session: false});
 
 const path = require("path");
@@ -165,9 +166,8 @@ let vr_image_processing = function (vr_images, user_email, postID) {
     });
 };
 
-
 router.post('/convert/images', requireAuth, function (req, res, next) {
-    let token = req.header('Authorization');
+    let token = req.header('authorization');
     let user_email = req.user.email;
 
     const form = new formidable.IncomingForm();
@@ -194,9 +194,11 @@ router.post('/convert/images', requireAuth, function (req, res, next) {
         });
     });
 });
+
 router.post('/convert/vtour', requireAuth, function (req, res, next) {
-    let token = req.header('Authorization');
+    let token = req.header('authorization');
     let user_email = req.user.email;
+
     const form = new formidable.IncomingForm();
     let vr_images = [], fields = {};
     form.parse(req, function (err, fields, files) {

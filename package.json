@@ -4,8 +4,7 @@
   "private": true,
   "scripts": {
     "start": "node ./bin/www",
-    "server:dev": "PORT=3001 node ./bin/www",
-    "server:dev:windows": "set PORT=3001&&node ./bin/www"
+    "server:dev": "cross-env PORT=3001 NODE_ENV=development node ./bin/www"
   },
   "dependencies": {
     "add-to-path": "^1.1.2",
@@ -63,5 +62,8 @@
     "serve-favicon": "~2.4.2",
     "sharp": "^0.17.3",
     "sqlite3": "^3.1.8"
+  },
+  "devDependencies": {
+    "cross-env": "^5.0.1"
   }
 }
