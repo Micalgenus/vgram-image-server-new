@@ -26,7 +26,7 @@ app.use(bodyParser.urlencoded({
     secret: config.secret
 }));
 app.use(cookieParser());
-app.use(express.static(path.join(__dirname, 'public')));
+app.use('/medias', express.static(path.join(__dirname, config.resource.MEDIAS_DIR)));
 
 app.use('/', index);
 
