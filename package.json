@@ -6,6 +6,9 @@
     "start": "node ./bin/www",
     "server:dev": "cross-env PORT=3001 NODE_ENV=development node ./bin/www"
   },
+  "engines": {
+    "node": "4.x.x"
+  },
   "dependencies": {
     "add-to-path": "^1.1.2",
     "app-root-path": "^2.0.1",
