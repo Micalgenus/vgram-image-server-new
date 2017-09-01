@@ -16,6 +16,7 @@ const Q = require('q');
 const multer = require('multer');
 const mkdirp = require('mkdirp-promise');
 const randomstring = require('randomstring');
+const fs = require('fs');
 
 const image_resize_information = [];
 const request = require("request");
@@ -47,10 +48,8 @@ let request_func = function (url, header, body) {
     if (!error && response.statusCode == 200) {
       let info = JSON.parse(body);
     }
-
   }
 
-  console.log(options);
   request(options, callback);
 };
 let normal_image_processing = function (normal_images, user_email, postID) {
@@ -129,7 +128,7 @@ let vr_image_processing = function (vr_images, user_email, postID) {
     return Promise.each(vr_images, function (image) {
       const d = new Date();
       let file_name = d.getFullYear() + '' + d.getMonth() + '' + d.getDate() + '' + d.getHours() + '' + d.getMinutes() + '' + d.getSeconds() + '' + d.getMilliseconds() + '' + Math.floor(Math.random() * 1000) + 1;
-      let original_path = baseDirectory + baseImageDir + 'vrimages/' + file_name + '_' + image.name;
+      let original_path = baseDirectory + baseImageDir + 'vrimages/' + user_email + "/" + file_name + '_' + image.name;
 
       return fsp.move(image.path, original_path).then(function () {
         vrImagePaths.push(original_path);
@@ -155,8 +154,6 @@ let vr_image_processing = function (vr_images, user_email, postID) {
           file_name: "tour.xml"
         });
         return vrpano.convertVRPano(vrImagePaths, folderName).then((test) => {
-          //console.log(test);
-          //  console.log(result);
           resolve(result);
         }).catch((err) => {
           console.log(err);
@@ -194,19 +191,16 @@ router.post('/convert/images', requireAuth, function (req, res, next) {
   }).on('file', function (field, file) {
     if (field == 'normal_images') normal_images.push(file);
   }).on('end', function () {
-    res.status(200);
-    res.send();
-    res.end();
     return normal_image_processing(normal_images, user_email, fields["postID"]).then((result) => {
       request_func([config.webServerUrl, "api/post/images"].join("/"),
         {
           "Content-Type": "application/json",
           "Authorization": token
         }, result);
+
+      return res.send(result);
     }).catch(() => {
-      res.status(500);
-      res.send();
-      res.end();
+      return res.status(500).send('error');
     });
   });
 });
@@ -224,9 +218,6 @@ router.post('/convert/vtour', requireAuth, function (req, res, next) {
   }).on('file', function (field, file) {
     if (field == 'vr_images') vr_images.push(file);
   }).on('end', function () {
-    // res.status(200);
-    // res.send();
-    // res.end();
     return vr_image_processing(vr_images, user_email, fields["postID"]).then((result) => {
       request_func([config.webServerUrl, "api/post/vtour"].join("/"),
         {
@@ -236,10 +227,7 @@ router.post('/convert/vtour', requireAuth, function (req, res, next) {
 
       return res.send(result);
     }).catch((err) => {
-
-      res.status(500);
-      res.send();
-      res.end();
+      return res.status(500).send('error');
     });
   });
 });
@@ -253,33 +241,35 @@ router.post('/convert/profile', requireAuth, function (req, res, next) {
   let profile_images = [], fields = {};
   return Promise.all([
     form.on('end', function () {
-      return profile_image_processing(profile_images, req, res).then(function (file) {
-        const image = sharp(file[0].path);
+      return profile_image_processing(profile_images, req, res).then(function (f) {
+        const image = sharp(f[0].path);
 
         return image
           .metadata()
           .then(function (metadata) {
-            let profile_path = baseImageDir + 'profileimages/' + user_email;
+            let url_path = 'profileimages/' + user_email;
+            let profile_path = baseImageDir + url_path;
             let original_path = baseDirectory + profile_path;
 
             let fname = randomstring.generate();
             let ext = fields['filename'].split('.')[1];
-            let file_path = [original_path, [fname, ext].join('.')].join('/');
+            let file = [fname, ext].join('.')
+            let file_path = [original_path, file].join('/');
 
-            if (true) { // windows
-              original_path = original_path.replace(/\//g, "\\");
-              file_path = file_path.replace(/\//g, "\\");
-            }
+            deleteFolderRecursive(original_path);
 
             return mkdirp(original_path).then(function () {
               return image
                 .resize(150, 150)
                 .crop(sharp.gravity.center)
-                .toFile(file_path, function (err, data, info) {
-                  file[0].path = file_path;
-                  return res.send(file[0]);
+                .toFile(file_path)
+                .then(function (err, data, info) {
+                  profile_path = profile_path.split('/resources')[1];
+                  let result = {
+                    url: [profile_path, file].join('/')
+                  };
+                  return res.send(result);
                 });
-
             });
           });
 
@@ -296,5 +286,19 @@ router.post('/convert/profile', requireAuth, function (req, res, next) {
     })]
   ).catch(next);
 });
+
+var deleteFolderRecursive = function (p) {
+  if (fs.existsSync(p)) {
+    fs.readdirSync(p).forEach(function (file, index) {
+      var curPath = path.join(p, file);
+      if (fs.lstatSync(curPath).isDirectory()) { // recurse
+        deleteFolderRecursive(curPath);
+      } else { // delete file
+        fs.unlinkSync(curPath);
+      }
+    });
+    fs.rmdirSync(p);
+  }
+};
 
 module.exports = router;
