@@ -128,7 +128,7 @@ let vr_image_processing = function (vr_images, user_email, postID) {
     return Promise.each(vr_images, function (image) {
       const d = new Date();
       let file_name = d.getFullYear() + '' + d.getMonth() + '' + d.getDate() + '' + d.getHours() + '' + d.getMinutes() + '' + d.getSeconds() + '' + d.getMilliseconds() + '' + Math.floor(Math.random() * 1000) + 1;
-      let original_path = baseDirectory + baseImageDir + 'vtours/' + user_email + "/" + file_name + '_' + image.name;
+      let original_path = baseDirectory + baseImageDir + 'vrimages/' + user_email + "/" + file_name + '_' + image.name;
 
       return fsp.move(image.path, original_path).then(function () {
         vrImagePaths.push(original_path);
@@ -154,12 +154,10 @@ let vr_image_processing = function (vr_images, user_email, postID) {
           file_name: "tour.xml"
         });
         return vrpano.convertVRPano(vrImagePaths, folderName).then((test) => {
-          vrImagePaths.forEach(function (imagePath) {
-            console.log(imagePath);
-            let imageName = path.basename(imagePath);
-            let vrimage_path = baseDirectory + baseImageDir + 'vrimages/' + user_email + "/" + imageName;
-            fsp.move(imagePath, vrimage_path).then(function () {
-            });
+          result["vrImages"].forEach(function (imagePath) {
+            let tilePath = [baseDirectory+baseImageDir, "vrimages", user_email, imagePath.tile_dir_name].join('/');
+            let tourPath = [baseDirectory + baseImageDir, "vtours", folderName, imagePath.tile_dir_name].join('/');
+            fsp.move(tilePath, tourPath).then(function () { });
           });
           resolve(result);
         }).catch((err) => {
