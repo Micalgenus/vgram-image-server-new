@@ -247,7 +247,7 @@ router.post('/convert/profile', requireAuth, function (req, res, next) {
         return image
           .metadata()
           .then(function (metadata) {
-            let url_path = 'profileimages/' + user_email;
+            let url_path = 'users/' + user_email;
             let profile_path = baseImageDir + url_path;
             let original_path = baseDirectory + profile_path;
 
