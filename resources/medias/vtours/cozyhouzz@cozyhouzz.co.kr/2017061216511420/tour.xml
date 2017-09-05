@@ -79,16 +79,16 @@
 
 
 	
-	<scene name="scene_2017513151141764501_2_result" title="2017513151141764501_2_result" onstart="" thumburl="../../../vrimages/2017513151141764501_2_result.tiles/thumb.jpg" lat="34.79917944" lng="126.69968625" heading="0.0">
+	<scene name="scene_2017513151141764501_2_result" title="2017513151141764501_2_result" onstart="" thumburl="./2017513151141764501_2_result.tiles/thumb.jpg" lat="34.79917944" lng="126.69968625" heading="0.0">
 
 		<view hlookat="0" vlookat="0" fovtype="MFOV" fov="120" maxpixelzoom="2.0" fovmin="70" fovmax="140" limitview="auto" />
 
-		<preview url="../../../vrimages/2017513151141764501_2_result.tiles/preview.jpg" />
+		<preview url="./2017513151141764501_2_result.tiles/preview.jpg" />
 
 		<image>
-			<cube url="../../../vrimages/2017513151141764501_2_result.tiles/pano_%s.jpg" />
+			<cube url="./2017513151141764501_2_result.tiles/pano_%s.jpg" />
 
-			<cube url="../../../vrimages/2017513151141764501_2_result.tiles/mobile/pano_%s.jpg" devices="mobile" />
+			<cube url="./2017513151141764501_2_result.tiles/mobile/pano_%s.jpg" devices="mobile" />
 		</image>
 
 		<!-- place your scene hotspots here -->
