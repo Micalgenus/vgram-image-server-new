@@ -54,7 +54,7 @@ vars = {
     AUTH0_JWT_EXPIRATION: 18000,
     AUTH0_ALGORITHM: "RS256",
 
-
+  WEB_SERVER_URL: "http://localhost:3000",
     APP_NAME: "vgram image server",
     PORT: 3001
 };

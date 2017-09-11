@@ -5,42 +5,19 @@ const env_var = require("./environment_vars");
 
 var config = {
     "development": {
-        "host": "localhost",    // actual hostname for resource hosting
-        "dialect": "sqlite",
-        "storage": "./db.development.sqlite",
-        "mediaUrl": "http://localhost:3001",    // 미디어/이미지 서버 URL
-        "webServerUrl": "http://localhost:3000"  // http://loveljhs2.iptime.org:3000
+        "webServerUrl": "http://localhost:3000"
     },
 
     "test": {
     },
 
     "production": {
-        "username": "root",
-        "password": "hitit113112!",
-        "database": "cozyhouzz",
-        "host": "api.cozyhouzz.co.kr",    // The host of the relational database.
-        "hostName": "api.cozyhouzz.co.kr",    // actual hostname for resource hosting,
-        "mediaUrl": "http://media.cozyhouzz.co.kr",     // 미디어/이미지 서버 URL
-        "webServerUrl": "http://www.cozyhouzz.co.kr",  // http://loveljhs2.iptime.org:3000
-        "dialect": "mysql",
-        "pool": {
-            "max": 50,
-            "min": 10,
-            "idle": 10000
-        },
-        // Configuring Mailgun API for sending transactional email
-        "mailgun_priv_key": "mailgun private key here",
-        // Configuring Mailgun domain for sending transactional email
-        "mailgun_domain": "mailgun domain here",
-        // Mailchimp API key
-        "mailchimpApiKey": "mailchimp api key here",
-        // Stripe API key
-        "stripeApiKey": "stripe api key goes here"
+        "webServerUrl": "http://api.vgram.kr"
     }
 };
 
 config[NODE_ENV].secret = env_var.AUTH0_CLIENT_SECRET;  // Secret key for JWT signing and encryption
+config[NODE_ENV].webServerUrl = env_var.WEB_SERVER_URL;
 config[NODE_ENV].root = rootPath.path;
 config[NODE_ENV].app = {
     name: env_var.APP_NAME
