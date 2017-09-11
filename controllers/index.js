@@ -17,6 +17,7 @@ const multer = require('multer');
 const mkdirp = require('mkdirp-promise');
 const randomstring = require('randomstring');
 const fs = require('fs');
+const md5 = require('md5');
 
 const image_resize_information = [];
 const request = require("request");
@@ -24,7 +25,7 @@ const moment = require("moment");
 const passport = require('passport');
 const passportService = require("../config/passport");
 
-const requireAuth = passport.authenticate('jwt', { session: false });
+const requireAuth = passport.authenticate('jwt', {session: false});
 
 const path = require("path");
 /**
@@ -59,8 +60,7 @@ let normal_image_processing = function (normal_images, user_email, postID) {
     size: ["original", "mobile", "desktop"]
   };
   return new Promise(function (resolve, reject) {
-    const d = new Date();
-    let file_name = d.getFullYear() + '' + d.getMonth() + '' + d.getDate() + '' + d.getHours() + '' + d.getMinutes() + '' + d.getSeconds() + '' + d.getMilliseconds() + '' + Math.floor(Math.random() * 1000) + 1;
+    let file_name = moment.utc().format('YYYYMMDDHHmmssSS');
 
     return fsp.ensureDir(baseDirectory + baseImageDir + 'images/' + user_email)
       .then(fsp.ensureDir(baseDirectory + baseImageDir + 'images/' + user_email + '/original'))
@@ -117,59 +117,49 @@ let normal_image_processing = function (normal_images, user_email, postID) {
   });
 };
 
-let vr_image_processing = function (vr_images, user_email, postID) {
-  let vrImagePaths = [];
+let moveVRImages = function (vr_images, user_email, postID) {
+  // let vrImagePaths = [];
   let result = {
+    vrImagePaths: [],
     postID: postID,
     vrImages: [],
-    vtour: []
+    vtour: {
+      tile_dir_name: []
+    }
   };
-  return new Promise(function (resolve, reject) {
-    return Promise.each(vr_images, function (image) {
-      const d = new Date();
-      let file_name = d.getFullYear() + '' + d.getMonth() + '' + d.getDate() + '' + d.getHours() + '' + d.getMinutes() + '' + d.getSeconds() + '' + d.getMilliseconds() + '' + Math.floor(Math.random() * 1000) + 1;
-      let original_path = baseDirectory + baseImageDir + 'vrimages/' + user_email + "/" + file_name + '_' + image.name;
 
-      return fsp.move(image.path, original_path).then(function () {
-        vrImagePaths.push(original_path);
-        result["vrImages"].push(
-          {
+  if (vr_images.length === 0) {
+    return Promise.reject("No VR Images found");
+  } else {
+    let moment_result = moment.utc().format('YYYYMMDDHHmmssSS');
+
+    return new Promise((resolve, reject) => {
+      return Promise.each(vr_images, function (image) {
+        let virtual_file_name = md5(moment_result + image.name) + path.extname(image.name);  // 한글 문제 때문에 파일이름을 md5로 변환함
+        let virtual_path = baseDirectory + baseImageDir + 'vrimages/' + user_email + "/" + virtual_file_name;
+        // let original_path = baseDirectory + baseImageDir + 'vrimages/' + user_email + "/" + md5(image.name) + path.extname(image.name);
+
+        return fsp.move(image.path, virtual_path).then(function () {
+          result["vrImagePaths"].push(virtual_path);
+
+          result["vrImages"].push({
             mimetype: image.type,
             type: "VR_IMAGE",
             size: image.size,
-            file_name: file_name + '_' + image.name,
-            tile_dir_name: file_name + '_' + path.basename(image.name, path.extname(image.name)) + ".tiles",
-            thumbnail_image_name: "thumb.jpg",
-            preview_image_name: "preview.jpg",
-            mobile_dir_name: "mobile"
+            file_name: virtual_file_name,
+            real_file_name: image.name,
           });
+
+          result["vtour"].tile_dir_name.push(
+            // 밖에서 처리하기 귀찮으니 미리 넣어두기
+            path.basename(virtual_file_name, path.extname(virtual_file_name)) + ".tiles"
+          );
+        });
+      }).then(() => {
+        return resolve(result);
       });
-    }).then(() => {
-      let moment_result = moment.utc().format('YYYYMMDDHHmmssSS');
-      let folderName = user_email + '/' + moment_result;
-      if (vrImagePaths.length > 0) {
-        result["vtour"].push({
-          type: "VTOUR",
-          file_path: moment_result,
-          file_name: "tour.xml"
-        });
-        return vrpano.convertVRPano(vrImagePaths, folderName).then((test) => {
-          result["vrImages"].forEach(function (imagePath) {
-            let tilePath = [baseDirectory+baseImageDir, "vrimages", user_email, imagePath.tile_dir_name].join('/');
-            let tourPath = [baseDirectory + baseImageDir, "vtours", folderName, imagePath.tile_dir_name].join('/');
-            fsp.move(tilePath, tourPath).then(function () { });
-          });
-          resolve(result);
-        }).catch((err) => {
-          console.log(err);
-        });
-      } else {
-        resolve(vrImagePaths);
-      }
-    }).catch(function (err) {
-      reject(err);
     });
-  });
+  }
 };
 
 let profile_image_processing = function (profile_images, req, res) {
@@ -223,17 +213,31 @@ router.post('/convert/vtour', requireAuth, function (req, res, next) {
   }).on('file', function (field, file) {
     if (field == 'vr_images') vr_images.push(file);
   }).on('end', function () {
-    return vr_image_processing(vr_images, user_email, fields["postID"]).then((result) => {
-      request_func([config.webServerUrl, "api/post/vtour"].join("/"),
-        {
-          "Content-Type": "application/json",
-          "Authorization": token
-        }, result);
+    return moveVRImages(vr_images, user_email, fields["postID"]).then((result) => {
+        let moment_result = moment.utc().format('YYYYMMDDHHmmssSS');
+        let folderName = user_email + '/' + moment_result;
 
-      return res.send(result);
-    }).catch((err) => {
-      return res.status(500).send('error');
-    });
+        // 관리 Tool, Queue 시스템 연동시 모든 작업 후 res를 전송하게 해야한다.
+        // 하지만 관리 Tool이 없고, VR 프로세싱이 오래 걸리기 때문에 일단 먼저 응답을 보낸다
+        res.send(result);
+
+        return vrpano.convertVRPano(result.vrImagePaths, folderName).then(() => {
+          result.vtour.type = "VTOUR";
+          result.vtour.file_path = folderName;
+          result.vtour.file_name = "tour.xml";
+          result.vtour.thumbnail_image_name = "thumb.jpg";
+          result.vtour.preview_image_name = "preview.jpg";
+          result.vtour.mobile_dir_name = "mobile";
+
+          request_func(
+            [config.webServerUrl, "api/post/vtour"].join("/"),
+            {
+              "Content-Type": "application/json",
+              "Authorization": token
+            }, result);
+        }).catch(next);
+      }
+    );
   });
 });
 
@@ -282,7 +286,8 @@ router.post('/convert/profile', requireAuth, function (req, res, next) {
         return res.status(500).send(err);
       });
     }),
-    form.parse(req, function (err, fields, files) { }),
+    form.parse(req, function (err, fields, files) {
+    }),
     form.on('field', function (field, value) {
       fields[field] = value;
     }),

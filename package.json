@@ -3,10 +3,12 @@
   "version": "0.0.1",
   "private": true,
   "scripts": {
-    "server:dev": "cross-env PORT=3001 NODE_ENV=development node ./bin/www"
+    "server:dev": "cross-env PORT=3001 NODE_ENV=development node ./bin/www",
+    "server:dev:debug": "cross-env PORT=3001 NODE_ENV=development node ./bin/www --debug",
+    "server:prod": "cross-env PORT=3001 NODE_ENV=production node ./bin/www"
   },
   "engines": {
-    "node": "4.x.x"
+    "node": "^4.5.0"
   },
   "dependencies": {
     "add-to-path": "^1.1.2",
@@ -46,6 +48,7 @@
     "lodash": "^4.15.0",
     "mailchimp-v3": "^1.0.2",
     "mailgun-js": "0.7.12",
+    "md5": "^2.2.1",
     "mkdir-promise": "^1.0.0",
     "mkdirp": "^0.5.1",
     "mkdirp-promise": "^5.0.1",
