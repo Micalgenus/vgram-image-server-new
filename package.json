@@ -5,7 +5,7 @@
   "scripts": {
     "server:dev": "cross-env PORT=3001 NODE_ENV=development node ./bin/www",
     "server:dev:debug": "cross-env PORT=3001 NODE_ENV=development node ./bin/www --debug",
-    "server:prod": "cross-env PORT=3001 NODE_ENV=production pm2 start ./bin/www -i 2 --name='vgram' --watch"
+    "server:prod": "cross-env PORT=80 NODE_ENV=production pm2 start ./bin/www -i 2 --name='vgram' --watch"
   },
   "engines": {
     "node": "^4.5.0"
