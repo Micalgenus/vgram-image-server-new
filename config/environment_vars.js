@@ -43,9 +43,10 @@ vars = {
    VTOUR_CONFIG_PATH: VTOUR_CONFIG_PATH,
    PANOTOUR_PATH: PANOTOUR_PATH,
 
-    AUTH0_DOMAIN: "",
+  AUTH0_CLIENT_SECRET: "",
+
+  AUTH0_DOMAIN: "",
     AUTH0_CLIENT_ID: "",
-    AUTH0_CLIENT_SECRET: "",
     AUTH0_CALLBACK_URL: "",
     AUTH0_JWKS_URI: "",
     AUTH0_IDENTIFIER: "",
@@ -54,8 +55,8 @@ vars = {
     AUTH0_ALGORITHM: "RS256",
 
 
-    APP_NAME: "cozyhouzz image server",
-    PORT: 3000
+    APP_NAME: "vgram image server",
+    PORT: 3001
 };
 
 _.forEach(vars, function(value, key){
