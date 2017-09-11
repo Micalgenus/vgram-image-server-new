@@ -58,8 +58,8 @@ jspm_packages/
 .yarn-integrity
 
 # dotenv environment variables file
-.env
-.test.env
+# .env
+# .test.env
 
 # image resource file
 resources/
