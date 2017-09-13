@@ -1,14 +1,21 @@
 var express = require('express');
 var path = require('path');
 var favicon = require('serve-favicon');
-var logger = require('morgan');
+var morgan = require('morgan');
+var logger = require('./utils/logger');
+var errorhandler = require('errorhandler');
+
 var cookieParser = require('cookie-parser');
 var bodyParser = require('body-parser');
 var cors = require('cors');
+
 var index = require('./controllers/index');
 var config = require("./config/main");
 
 var app = express();
+
+var env = process.env.NODE_ENV || "development";
+app.set('env', env);
 
 // view engine setup
 app.set('views', path.join(__dirname, 'views'));
@@ -17,7 +24,6 @@ app.set('view engine', 'ejs');
 // uncomment after placing your favicon in /public
 //app.use(favicon(path.join(__dirname, 'public', 'favicon.ico')));
 app.use(cors());
-app.use(logger('dev'));
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({
     limit: '150mb',
@@ -48,5 +54,14 @@ app.use(function(err, req, res, next) {
   res.status(err.status || 500);
   res.render('error');
 });
+
+if (app.get('env') === 'production') {
+  app.use(morgan("combined", {"stream": logger.stream}));
+}
+
+if (app.get('env') === 'development') {
+  app.use(morgan('dev'));   // 고로, 4.X 버전에서는 morgan을 사용해야 함. logger와 같은 역할
+  app.use(errorhandler());
+}
 
 module.exports = app;

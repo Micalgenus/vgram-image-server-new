@@ -1,25 +1,24 @@
 #!/usr/bin/env node
+"use strict";
 
 /**
  * Module dependencies.
  */
-
-var app = require('../app');
-var debug = require('debug')('image-server:server');
-var http = require('http');
-
+const app = require('../app');
+const debug = require('debug')('image-server:server');
+const http = require('http');
+const logger = require('../utils/logger');
 /**
  * Get port from environment and store in Express.
  */
-
-var port = normalizePort(process.env.PORT || '80');
+let port = normalizePort(process.env.PORT || '80');
 app.set('port', port);
+
 
 /**
  * Create HTTP server.
  */
-
-var server = http.createServer(app);
+let server = http.createServer(app);
 
 /**
  * Listen on provided port, on all network interfaces.
@@ -65,11 +64,11 @@ function onError(error) {
   // handle specific listen errors with friendly messages
   switch (error.code) {
     case 'EACCES':
-      console.error(bind + ' requires elevated privileges');
+      logger.error(bind + ' requires elevated privileges');
       process.exit(1);
       break;
     case 'EADDRINUSE':
-      console.error(bind + ' is already in use');
+      logger.error(bind + ' is already in use');
       process.exit(1);
       break;
     default:
@@ -86,6 +85,5 @@ function onListening() {
   var bind = typeof addr === 'string'
     ? 'pipe ' + addr
     : 'port ' + addr.port;
-  debug('Listening on ' + bind);
-  console.log('Listening on ' + bind);
+  logger.info('Listening on ' + bind);
 }

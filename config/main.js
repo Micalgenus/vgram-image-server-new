@@ -18,6 +18,7 @@ var config = {
 
 config[NODE_ENV].secret = env_var.AUTH0_CLIENT_SECRET;  // Secret key for JWT signing and encryption
 config[NODE_ENV].webServerUrl = env_var.WEB_SERVER_URL;
+config[NODE_ENV].LOG_DIR = env_var.LOG_DIR;
 config[NODE_ENV].root = rootPath.path;
 config[NODE_ENV].app = {
     name: env_var.APP_NAME
