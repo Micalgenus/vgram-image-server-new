@@ -61,5 +61,4 @@ jspm_packages/
 # .env
 # .test.env
 
-# image resource file
-resources/
+
