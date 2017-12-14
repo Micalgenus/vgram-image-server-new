@@ -82,10 +82,10 @@ exports.convertVRPano = function (imagePaths, folderName) {
     const thumbPath = "-thumbpath=" + folderPath + "/panos/%BASENAME%.tiles/thumb.jpg";
     const xmlPath = "-xmlpath=" + path.posix.join(folderPath, "tour.xml");
     // const htmlPath = "-htmlpath=" + folderPath + "/tour.html";
-    // const previewPath = "previewpath=" + folderPath + "/panos/%BASENAME%.tiles/preview.jpg";
-    // const previewArgs = "-preview=true";
+    const previewPath = "-previewpath=" + folderPath + "/panos/%BASENAME%.tiles/preview.jpg";
+    const previewArgs = "-preview=true";
 
-    const makepanoArgs = _.concat(["makepano", configArgs], imagePaths, tilePath, customImagePath, thumbPath, xmlPath);
+    const makepanoArgs = _.concat(["makepano", configArgs], imagePaths, tilePath, customImagePath, thumbPath, xmlPath, previewPath);
 
     // image 파일이 존재하는지에 대한 검증은 하지 못함
     // 이미지 파일이 존재하지 않아도 echo(stdout)로 출력됨, stderr = ""

@@ -78,49 +78,49 @@
 	</action>
 
 
-	
-	<scene name="scene_SAM_100_0073" title="SAM_100_0073" onstart="" thumburl="../../../vrimages/sinho0689@gmail.com/SAM_100_0073.tiles/thumb.jpg" lat="" lng="" heading="">
+
+	<scene name="scene_SAM_100_0073" title="SAM_100_0073" onstart="" thumburl="pano/SAM_100_0073.tiles/thumb.jpg" lat="" lng="" heading="">
 
 		<view hlookat="0" vlookat="0" fovtype="MFOV" fov="120" maxpixelzoom="2.0" fovmin="70" fovmax="140" limitview="auto" />
 
-		<preview url="../../../vrimages/sinho0689@gmail.com/SAM_100_0073.tiles/preview.jpg" />
+		<preview url="pano/SAM_100_0073.tiles/preview.jpg" />
 
 		<image>
-			<cube url="../../../vrimages/sinho0689@gmail.com/SAM_100_0073.tiles/pano_%s.jpg" />
+			<cube url="pano/SAM_100_0073.tiles/pano_%s.jpg" />
 
-			<cube url="../../../vrimages/sinho0689@gmail.com/SAM_100_0073.tiles/mobile/pano_%s.jpg" devices="mobile" />
+			<cube url="pano/SAM_100_0073.tiles/mobile/pano_%s.jpg" devices="mobile" />
 		</image>
 
 		<!-- place your scene hotspots here -->
 
 	</scene>
 
-	<scene name="scene_SAM_100_0074" title="SAM_100_0074" onstart="" thumburl="../../../vrimages/sinho0689@gmail.com/SAM_100_0074.tiles/thumb.jpg" lat="" lng="" heading="">
+	<scene name="scene_SAM_100_0074" title="SAM_100_0074" onstart="" thumburl="pano/SAM_100_0074.tiles/thumb.jpg" lat="" lng="" heading="">
 
 		<view hlookat="0" vlookat="0" fovtype="MFOV" fov="120" maxpixelzoom="2.0" fovmin="70" fovmax="140" limitview="auto" />
 
-		<preview url="../../../vrimages/sinho0689@gmail.com/SAM_100_0074.tiles/preview.jpg" />
+		<preview url="pano/SAM_100_0074.tiles/preview.jpg" />
 
 		<image>
-			<cube url="../../../vrimages/sinho0689@gmail.com/SAM_100_0074.tiles/pano_%s.jpg" />
+			<cube url="pano/SAM_100_0074.tiles/pano_%s.jpg" />
 
-			<cube url="../../../vrimages/sinho0689@gmail.com/SAM_100_0074.tiles/mobile/pano_%s.jpg" devices="mobile" />
+			<cube url="pano/SAM_100_0074.tiles/mobile/pano_%s.jpg" devices="mobile" />
 		</image>
 
 		<!-- place your scene hotspots here -->
 
 	</scene>
 
-	<scene name="scene_SAM_100_0075" title="SAM_100_0075" onstart="" thumburl="../../../vrimages/sinho0689@gmail.com/SAM_100_0075.tiles/thumb.jpg" lat="" lng="" heading="">
+	<scene name="scene_SAM_100_0075" title="SAM_100_0075" onstart="" thumburl="pano/SAM_100_0075.tiles/thumb.jpg" lat="" lng="" heading="">
 
 		<view hlookat="0" vlookat="0" fovtype="MFOV" fov="120" maxpixelzoom="2.0" fovmin="70" fovmax="140" limitview="auto" />
 
-		<preview url="../../../vrimages/sinho0689@gmail.com/SAM_100_0075.tiles/preview.jpg" />
+		<preview url="pano/SAM_100_0075.tiles/preview.jpg" />
 
 		<image>
-			<cube url="../../../vrimages/sinho0689@gmail.com/SAM_100_0075.tiles/pano_%s.jpg" />
+			<cube url="pano/SAM_100_0075.tiles/pano_%s.jpg" />
 
-			<cube url="../../../vrimages/sinho0689@gmail.com/SAM_100_0075.tiles/mobile/pano_%s.jpg" devices="mobile" />
+			<cube url="pano/SAM_100_0075.tiles/mobile/pano_%s.jpg" devices="mobile" />
 		</image>
 
 		<!-- place your scene hotspots here -->
