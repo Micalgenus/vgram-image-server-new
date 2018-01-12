@@ -1,0 +1,9 @@
+{
+    "apps": [
+        {
+            "name": "vgram-image-server",
+            "script": "npm",
+            "args" : "run server:dev"
+        }
+    ]
+}
